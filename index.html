@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Random Quote</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { 
+      font-family: 'Inter', sans-serif; 
+      background: linear-gradient(135deg, #667eea, #764ba2); 
+      color: white; 
+      min-height: 100vh; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      padding: 1rem;
+    }
+    .card { 
+      background: rgba(255,255,255,0.1); 
+      backdrop-filter: blur(12px); 
+      border-radius: 20px; 
+      padding: 2.5rem; 
+      max-width: 500px; 
+      text-align: center; 
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .quote { 
+      font-family: 'Playfair Display', serif; 
+      font-size: 1.8rem; 
+      margin: 1.5rem 0; 
+      line-height: 1.4;
+      min-height: 80px;
+    }
+    .author { 
+      font-weight: 600; 
+      font-size: 1.1rem; 
+      margin-bottom: 2rem; 
+      opacity: 0.9;
+    }
+    .buttons { 
+      display: flex; 
+      gap: 1rem; 
+      justify-content: center;
+    }
+    button { 
+      background: #ffeaa7; 
+      color: #2d3436; 
+      border: none; 
+      padding: 0.8rem 1.5rem; 
+      border-radius: 50px; 
+      font-weight: 600; 
+      cursor: pointer; 
+      transition: 0.3s;
+    }
+    button:hover { 
+      background: #fdcb6e; 
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="quote" id="quote">Click below for inspiration!</div>
+    <div class="author" id="author"></div>
+    
+    <div class="buttons">
+      <button id="newBtn">New Quote</button>
+      <button id="tweetBtn">Tweet</button>
+      <button id="copyBtn">Copy</button>
+    </div>
+  </div>
+
+  <script>
+    const quotes = [
+      { q: "The only way to do great work is to love what you do.", a: "Steve Jobs" },
+      { q: "Innovation distinguishes between a leader and a follower.", a: "Steve Jobs" },
+      { q: "Life is what happens when you're busy making other plans.", a: "John Lennon" },
+      { q: "Get busy living or get busy dying.", a: "Stephen King" },
+      { q: "You miss 100% of the shots you don't take.", a: "Wayne Gretzky" },
+      { q: "Whether you think you can or you think you can’t, you’re right.", a: "Henry Ford" },
+      { q: "The best time to plant a tree was 20 years ago. The second best time is now.", a: "Chinese Proverb" },
+      { q: "I have not failed. I've just found 10,000 ways that won't work.", a: "Thomas Edison" },
+      { q: "Success is not final, failure is not fatal: it is the courage to continue that counts.", a: "Winston Churchill" },
+      { q: "Don’t watch the clock; do what it does. Keep going.", a: "Sam Levenson" },
+      { q: "Everything you’ve ever wanted is on the other side of fear.", a: "George Addair" },
+      { q: "Believe you can and you’re halfway there.", a: "Theodore Roosevelt" },
+      { q: "Act as if what you do makes a difference. It does.", a: "William James" },
+      { q: "The future belongs to those who believe in the beauty of their dreams.", a: "Eleanor Roosevelt" },
+      { q: "It does not matter how slowly you go as long as you do not stop.", a: "Confucius" },
+      { q: "You are never too old to set another goal or to dream a new dream.", a: "C.S. Lewis" },
+      { q: "The only limit to our realization of tomorrow is our doubts of today.", a: "Franklin D. Roosevelt" },
+      { q: "What you get by achieving your goals is not as important as what you become by achieving your goals.", a: "Zig Ziglar" },
+      { q: "Do what you can, with what you have, where you are.", a: "Theodore Roosevelt" },
+      { q: "Dream big and dare to fail.", a: "Norman Vaughan" }
+    ];
+
+    const quoteEl = document.getElementById('quote');
+    const authorEl = document.getElementById('author');
+    const newBtn = document.getElementById('newBtn');
+    const tweetBtn = document.getElementById('tweetBtn');
+    const copyBtn = document.getElementById('copyBtn');
+
+    function getRandomQuote() {
+      const { q, a } = quotes[Math.floor(Math.random() * quotes.length)];
+      quoteEl.textContent = `"${q}"`;
+      authorEl.textContent = `— ${a}`;
+    }
+
+    function tweetQuote() {
+      const text = `${quoteEl.textContent} ${authorEl.textContent}`;
+      const truncated = text.length > 260 ? text.slice(0, 257) + '...' : text;
+      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(truncated)}`, '_blank');
+    }
+
+    function copyQuote() {
+      const text = `${quoteEl.textContent}\n${authorEl.textContent}`;
+      navigator.clipboard.writeText(text).then(() => {
+        const orig = copyBtn.textContent;
+        copyBtn.textContent = 'Copied!';
+        setTimeout(() => copyBtn.textContent = orig, 1500);
+      }).catch(() => {
+        const ta = document.createElement('textarea');
+        ta.value = text; document.body.appendChild(ta);
+        ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+        const orig = copyBtn.textContent;
+        copyBtn.textContent = 'Copied!';
+        setTimeout(() => copyBtn.textContent = orig, 1500);
+      });
+    }
+
+    newBtn.onclick = getRandomQuote;
+    tweetBtn.onclick = tweetQuote;
+    copyBtn.onclick = copyQuote;
+
+    // Load first quote
+    getRandomQuote();
+  </script>
+</body>
+</html>
